@@ -1,0 +1,10 @@
+---
+- name: Install prerequisites 
+  apt:
+    name:
+      - apt-transport-https
+      - openjdk-8-jre-headless
+      - uuid-runtime
+      - pwgen     
+    state: present
+    update_cache: yes

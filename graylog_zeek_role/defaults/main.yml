@@ -1,0 +1,32 @@
+---
+# defaults file for graylog_zeek_role
+
+#xenial for 16.04 or bionic for 18.04
+ubuntu_version: 'bionic'
+
+elasticsearch_version: '6.x'
+
+cluster_name: graylog
+
+node_name: nde
+
+elasticsearch_network_host: '127.0.0.1'
+
+elasticsearch_http_port: 9200
+
+graylog_version: '3.0'
+
+graylog_root_username: nde
+
+#echo -n yourpassword | shasum -a 256
+graylog_root_password_sha2: 'c12dbd354c7b7770c3c8bd5c6804a85c6ef2fdd04ddbc557f9f64830fac018b2'
+
+#pwgen -N 1 -s 96
+graylog_password_secret: 'yq9FP52voPvKo1CoYCCOSKDF2DpNwaK3FBfAC8WwTMpdg1v4HK5ZrcF142wTWYr7iT1R200zYLzY9zr5K2botu11ZyOMFURb'
+
+graylog_root_timezone: 'Africa/Nairobi'
+
+graylog_http_bind_address: '178.128.235.84'
+#graylog_http_bind_address: '0.0.0.0'
+
+graylog_port: '9000'

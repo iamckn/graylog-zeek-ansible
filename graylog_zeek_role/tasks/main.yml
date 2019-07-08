@@ -1,0 +1,31 @@
+---
+# tasks file for wireguard_role
+
+- name: Install prequisites on the server
+  include: 'install_prerequisites.yml'
+  tags: prerequisites
+
+- name: Install mongodb
+  include: 'install_mongodb.yml'
+  tags: mongodb
+
+- name: Install and configure elasticsearch
+  include: 'install_elasticsearch.yml'
+  tags: elasticsearch
+
+- name: Install and configure graylog
+  include: 'install_graylog.yml'
+  tags: graylog
+
+#When you need to add new clients in future specify the tag "add_client"
+#Set the "new_client" variable to the name of your new client config file
+#Set the "new_client_ip" variable to the IP of the new client
+#The new client config will be downloaded to the "wireguard_role/profiles/" folder on your local host
+
+
+- name: Add another client - will only run if the add_client tag is specified
+  include: 'additional_client.yml'
+  vars:
+    new_client: newclient
+    new_client_ip: 10.200.200.12
+  tags: ['never', 'add_client']

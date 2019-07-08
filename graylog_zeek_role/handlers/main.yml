@@ -1,0 +1,39 @@
+---
+# handlers file for wireguard_role
+
+- name: Reboot the server
+  shell: sleep 2 && shutdown -r now
+  async: 1
+  poll: 0
+  ignore_errors: true
+  listen: "reboot the server"
+  
+- name: Wait for the reboot to complete if there was a change.
+  wait_for_connection:
+    connect_timeout: 20
+    sleep: 5
+    delay: 5
+    timeout: 300
+  listen: "reboot the server"
+
+- name: "reload systemd configuration"
+  systemd:
+    daemon_reload: yes
+
+- name: "restart graylog-server"
+  service:
+    name: "graylog-server"
+    state: "restarted"
+    enabled: "yes"
+
+- name: "restart mongod"
+  service:
+    name: "mongod"
+    state: "restarted"
+    enabled: "yes"
+
+- name: "restart elasticsearch"
+  service:
+    name: "elasticsearch"
+    state: "restarted"
+    enabled: "yes"

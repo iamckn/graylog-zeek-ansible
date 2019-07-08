@@ -1,0 +1,8 @@
+---
+
+- name: Setup graylog with zeek logging on a remote server
+  hosts: all
+  #become: true
+  gather_facts: true
+  roles:
+    - {role: 'graylog_zeek_role', tags: 'zeek'}

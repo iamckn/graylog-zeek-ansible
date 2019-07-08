@@ -1,0 +1,29 @@
+---
+- name: Add mongodb apt key.
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: 9DA31620334BD75D9DCB49F368818C72E52529D4
+
+- name: Add mongodb repository.
+  apt_repository:
+    repo: 'deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu {{ ubuntu_version }}/mongodb-org/4.0 multiverse'
+    state: present
+    update_cache: yes
+
+- name: "Install mongodb"
+  apt:
+    name: "mongodb-org"
+    state: "present"
+    allow_unauthenticated: yes
+  notify:
+    - "reload systemd configuration"
+    - "restart mongod"
+
+- meta: "flush_handlers"
+
+- name: "Wait for mongodb to startup"
+  wait_for:
+    host: "127.0.0.1"
+    port: 27017
+    delay: 5
+    connect_timeout: 1

@@ -1,0 +1,66 @@
+---
+- name: Install graylog repo
+  apt:
+    deb: https://packages.graylog2.org/repo/packages/graylog-{{ graylog_version }}-repository_latest.deb
+    state: "present"
+
+- name: Install graylog server
+  package:
+    name: graylog-server
+    state: present
+    update_cache: yes
+
+- name: Download geolocation database
+  get_url:
+    url: http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
+    dest: /tmp/GeoLite2-City.tar.gz
+    owner: root
+    group: root
+
+- name: Unarchive the geolocation database
+  unarchive:
+    src: /tmp/GeoLite2-City.tar.gz
+    dest: /etc/graylog/server/
+    remote_src: yes
+    extra_opts:
+      --strip=1
+
+#- name: Copy geoip db to correct path
+#  shell: cp /tmp/GeoLite2-City*/GeoLite2-City.mmdb /etc/graylog/server/
+
+- name: Configure graylog defaults.
+  template:
+    src: graylog-server.j2
+    dest: /etc/default/graylog-server
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Configure graylog.
+  template:
+    src: server.conf.j2
+    dest: /etc/graylog/server/server.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - "reload systemd configuration"
+    - "restart graylog-server"
+
+- name: Enable Graylog.
+  service:
+    name: graylog-server
+    state: started
+    enabled: yes
+
+- meta: flush_handlers
+
+- name: "Wait for Graylog server to startup"
+  uri:
+    url: "http://{{ graylog_http_bind_address }}:{{ graylog_port }}"
+    status_code: 200
+    validate_certs: False
+  register: result
+  until: result.status == 200
+  retries: 60
+  delay: 5
