@@ -26,7 +26,7 @@ graylog_password_secret: 'yq9FP52voPvKo1CoYCCOSKDF2DpNwaK3FBfAC8WwTMpdg1v4HK5Zrc
 
 graylog_root_timezone: 'Africa/Nairobi'
 
-graylog_http_bind_address: '178.128.235.84'
+graylog_http_bind_address: '<IP>'
 #graylog_http_bind_address: '0.0.0.0'
 
 graylog_port: '9000'
