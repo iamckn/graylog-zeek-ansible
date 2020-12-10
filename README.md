@@ -1,12 +1,5 @@
-Have zeek set up (locally or on a remote server) - https://github.com/iamckn/zeek_pfring_ansible
+Have zeek set up (locally or on a remote server) - https://github.com/iamckn/zeek_pfring_ansible. Make sure filebeat is configured to ship the logs to the graylog server on port 5044.
 
-Set up filebeat to ship the logs to this server
-
-```bash
-git clone https://github.com/iamckn/elk_ansible
-cd elk_ansible
-ansible-playbook setup.yml -u root -k -i hosts -t install_filebeat
-```
 
 # Prepare the server
 
