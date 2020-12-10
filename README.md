@@ -73,7 +73,9 @@ ansible-playbook graylog_zeek.yml -u c -k -K -i hosts -t graylog
 ansible-playbook graylog_zeek.yml -u c -k -K -i hosts
 ```
 
-# Zeek Specific Configs
+# Restore backup configs (zeek)
+
+This expects zeek json logs shipped by filebeats on port 5044
 
 ```bash
 mongo
@@ -88,8 +90,14 @@ mongorestore --db graylog --collection streamrules graylog/streamrules.bson
 mongorestore --db graylog --collection dashboards graylog/dashboards.bson
 ```
 
-Set stream indexes to default index
+Set stream indexes to default index and restart graylog
 
 ```bash
 sudo systemctl restart graylog-server
+```
+
+# Database backup
+
+```bash
+mongodump --db graylog --out graylog_backup
 ```
