@@ -4,7 +4,10 @@
 #xenial for 16.04 or bionic for 18.04
 ubuntu_version: 'bionic'
 
-elasticsearch_version: '6.x'
+#Elasticsearch
+ELASTIC_VERSION: '7.9.0'
+ELASTIC_GPG_URL: 'https://artifacts.elastic.co/GPG-KEY-elasticsearch'
+ELASTIC_REPO_URL: 'deb https://artifacts.elastic.co/packages/7.x/apt stable main
 
 cluster_name: graylog
 
@@ -19,10 +22,10 @@ graylog_version: '3.0'
 graylog_root_username: nde
 
 #echo -n yourpassword | shasum -a 256
-graylog_root_password_sha2: 'c12dbd354c7b7770c3c8bd5c6804a85c6ef2fdd04ddbc557f9f64830fac018b2'
+graylog_root_password_sha2: ''
 
 #pwgen -N 1 -s 96
-graylog_password_secret: 'yq9FP52voPvKo1CoYCCOSKDF2DpNwaK3FBfAC8WwTMpdg1v4HK5ZrcF142wTWYr7iT1R200zYLzY9zr5K2botu11ZyOMFURb'
+graylog_password_secret: ''
 
 graylog_root_timezone: 'Africa/Nairobi'
 
