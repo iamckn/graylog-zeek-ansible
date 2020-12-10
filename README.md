@@ -1,3 +1,12 @@
+Have zeek set up (locally or on a remote server) - https://github.com/iamckn/zeek_pfring_ansible
+Set up filebeat to ship the logs to this server
+
+```bash
+git clone https://github.com/iamckn/elk_ansible
+cd elk_ansible
+ansible-playbook setup.yml -u root -k -i hosts -t install_filebeat
+```
+
 # Prepare the server
 
 Set the timezone
@@ -75,7 +84,7 @@ ansible-playbook graylog_zeek.yml -u c -k -K -i hosts
 
 # Restore backup configs (zeek)
 
-This expects zeek json logs shipped by filebeats on port 5044
+This expects zeek json logs shipped by filebeat on port 5044
 
 ```bash
 mongo
