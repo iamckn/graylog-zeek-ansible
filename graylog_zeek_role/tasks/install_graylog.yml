@@ -10,23 +10,17 @@
     state: present
     update_cache: yes
 
-- name: Download geolocation database
-  get_url:
-    url: http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
-    dest: /tmp/GeoLite2-City.tar.gz
-    owner: root
-    group: root
+- name: Stat GeoIP database
+  stat:
+    path: '/etc/graylog/server/GeoLite2-City.mmdb'
+  register: geoip_stat
 
-- name: Unarchive the geolocation database
+- name: Download and extract GeoIP database
   unarchive:
-    src: /tmp/GeoLite2-City.tar.gz
-    dest: /etc/graylog/server/
+    src: '{{ geoip_url }}'
+    dest: '/etc/graylog/server/'
     remote_src: yes
-    extra_opts:
-      --strip=1
-
-#- name: Copy geoip db to correct path
-#  shell: cp /tmp/GeoLite2-City*/GeoLite2-City.mmdb /etc/graylog/server/
+  when: not geoip_stat.stat.exists
 
 - name: Configure graylog defaults.
   template:
@@ -36,13 +30,14 @@
     group: root
     mode: 0644
 
-- name: Configure graylog.
-  template:
-    src: server.conf.j2
-    dest: /etc/graylog/server/server.conf
-    owner: root
-    group: root
-    mode: 0644
+- name: Set admin password
+  lineinfile:
+    path: /etc/graylog/server/server.conf
+    regexp: '^root_password_sha2 ='
+    line: "root_password_sha2 = {{ graylog_root_password_sha2 }}"
+    
+- name: Set secret key
+  shell: sed -i -e "s/password_secret =.*/password_secret = {{ graylog_password_secret }}/" /etc/graylog/server/server.conf      
   notify:
     - "reload systemd configuration"
     - "restart graylog-server"
