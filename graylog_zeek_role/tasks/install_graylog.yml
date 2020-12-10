@@ -22,25 +22,25 @@
     remote_src: yes
   when: not geoip_stat.stat.exists
 
-- name: Configure graylog defaults.
-  template:
-    src: graylog-server.j2
-    dest: /etc/default/graylog-server
-    owner: root
-    group: root
-    mode: 0644
+#- name: Configure graylog defaults.
+#  template:
+#    src: graylog-server.j2
+#    dest: /etc/default/graylog-server
+#    owner: root
+#    group: root
+#    mode: 0644
 
-- name: Set admin password
-  lineinfile:
-    path: /etc/graylog/server/server.conf
-    regexp: '^root_password_sha2 ='
-    line: "root_password_sha2 = {{ graylog_root_password_sha2 }}"
+#- name: Set admin password
+#  lineinfile:
+#    path: /etc/graylog/server/server.conf
+#    regexp: '^root_password_sha2 ='
+#    line: "root_password_sha2 = {{ graylog_root_password_sha2 }}"
     
-- name: Set secret key
-  shell: sed -i -e "s/password_secret =.*/password_secret = {{ graylog_password_secret }}/" /etc/graylog/server/server.conf      
-  notify:
-    - "reload systemd configuration"
-    - "restart graylog-server"
+#- name: Set secret key
+#  shell: sed -i -e "s/password_secret =.*/password_secret = {{ graylog_password_secret }}/" /etc/graylog/server/server.conf      
+#  notify:
+#    - "reload systemd configuration"
+#    - "restart graylog-server"
 
 - name: Enable Graylog.
   service:
