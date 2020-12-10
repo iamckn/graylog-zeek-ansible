@@ -33,11 +33,11 @@
   apt:
     name: 'elasticsearch={{ ELASTIC_VERSION }}'
     
-- name: Specify ES cluster name
+- name: Specify ES node name
   lineinfile:
     path: /etc/elasticsearch/elasticsearch.yml
-    regexp: '^cluster.name:'
-    line: 'cluster.name: graylog'
+    regexp: '^#node.name:'
+    line: 'node.name: graylog'
     
 - name: Set to single node mode
   lineinfile:
@@ -45,7 +45,7 @@
     line: 'discovery.type: single-node'
     create: yes
 
-- name: Set to single node mode
+- name: Set search max buckets to 50000
   lineinfile:
     path: /etc/elasticsearch/elasticsearch.yml
     line: 'search.max_buckets: 50000'

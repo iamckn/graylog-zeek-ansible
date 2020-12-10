@@ -30,29 +30,50 @@
 #    group: root
 #    mode: 0644
 
-#- name: Set admin password
-#  lineinfile:
-#    path: /etc/graylog/server/server.conf
-#    regexp: '^root_password_sha2 ='
-#    line: "root_password_sha2 = {{ graylog_root_password_sha2 }}"
-    
-#- name: Set secret key
-#  shell: sed -i -e "s/password_secret =.*/password_secret = {{ graylog_password_secret }}/" /etc/graylog/server/server.conf      
-#  notify:
-#    - "reload systemd configuration"
-#    - "restart graylog-server"
+- name: Set secret key
+  lineinfile:
+    path: /etc/graylog/server/server.conf
+    regexp: '^password_secret ='
+    line: "password_secret = {{ graylog_password_secret }}"
 
-- name: Enable Graylog.
-  service:
-    name: graylog-server
-    state: started
-    enabled: yes
+- name: Set admin user
+  lineinfile:
+    path: /etc/graylog/server/server.conf
+    regexp: '^#root_username ='
+    line: "root_password_sha2 = {{ graylog_root_username }}"
+
+- name: Set admin password
+  lineinfile:
+    path: /etc/graylog/server/server.conf
+    regexp: '^root_password_sha2 ='
+    line: "root_password_sha2 = {{ graylog_root_password_sha2 }}"
+
+- name: Set graylog timezone
+  lineinfile:
+    path: /etc/graylog/server/server.conf
+    regexp: '^#root_timezone ='
+    line: "root_timezone = {{ graylog_root_timezone }}"
+
+- name: Set http publish uri
+  lineinfile:
+    path: /etc/graylog/server/server.conf
+    regexp: '^#http_publish_uri ='
+    line: "http_publish_uri = http://{{ ansible_default_ipv4.address }}:{{ graylog_bind_port }}/"
+
+- name: Set http bind address
+  lineinfile:
+    path: /etc/graylog/server/server.conf
+    regexp: '^#http_bind_address = 127.0.0.1:9000'
+    line: "http_bind_address = {{ ansible_default_ipv4.address }}:{{ graylog_bind_port }}"
+  notify:
+    - "reload systemd configuration"
+    - "restart graylog-server"
 
 - meta: flush_handlers
 
 - name: "Wait for Graylog server to startup"
   uri:
-    url: "http://{{ graylog_http_bind_address }}:{{ graylog_port }}"
+    url: "http://{{ ansible_default_ipv4.address }}:{{ graylog_bind_port }}"
     status_code: 200
     validate_certs: False
   register: result
