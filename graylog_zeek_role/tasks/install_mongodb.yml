@@ -1,18 +1,18 @@
 ---
-- name: Add mongodb apt key.
+- name: Add Mongodb GPG key
   apt_key:
-    keyserver: keyserver.ubuntu.com
-    id: 9DA31620334BD75D9DCB49F368818C72E52529D4
+    url: "{{ MONGODB_GPG_URL }}"
+    state: present
 
 - name: Add mongodb repository.
   apt_repository:
-    repo: 'deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu {{ ubuntu_version }}/mongodb-org/4.0 multiverse'
+    repo: '{{ MONGODB_REPO_URL }}'
     state: present
     update_cache: yes
 
 - name: "Install mongodb"
   apt:
-    name: "mongodb-org"
+    name: "mongodb-org={{ MONGODB_VERSION }}"
     state: "present"
     allow_unauthenticated: yes
   notify:

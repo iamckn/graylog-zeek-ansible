@@ -2,6 +2,11 @@
 # defaults file for graylog_zeek_role
 
 #Elasticsearch
+MONGODB_VERSION: '4.4.2'
+MONGODB_GPG_URL: 'https://www.mongodb.org/static/pgp/server-4.4.asc'
+MONGODB_REPO_URL: 'deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse'
+
+#Elasticsearch
 ELASTIC_VERSION: '7.9.0'
 ELASTIC_GPG_URL: 'https://artifacts.elastic.co/GPG-KEY-elasticsearch'
 ELASTIC_REPO_URL: 'deb https://artifacts.elastic.co/packages/7.x/apt stable main'
