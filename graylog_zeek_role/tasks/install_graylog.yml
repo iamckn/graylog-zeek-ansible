@@ -6,7 +6,7 @@
 
 - name: Install graylog server
   package:
-    name: graylog-server
+    name: ['graylog-server', 'graylog-enterprise-plugins', 'graylog-integrations-plugins', 'graylog-enterprise-integrations-plugins']
     state: present
     update_cache: yes
 
