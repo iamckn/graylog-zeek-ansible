@@ -32,7 +32,13 @@
 - name: Install Elasticsearch
   apt:
     name: 'elasticsearch={{ ELASTIC_VERSION }}'
-
+    
+- name: Specify ES cluster name
+  lineinfile:
+    path: /etc/elasticsearch/elasticsearch.yml
+    regexp: '^cluster.name:'
+    line: 'cluster.name: graylog'
+    
 - name: Set to single node mode
   lineinfile:
     path: /etc/elasticsearch/elasticsearch.yml
