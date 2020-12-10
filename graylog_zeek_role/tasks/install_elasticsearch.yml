@@ -1,42 +1,59 @@
----
-- name: Add Elasticsearch apt key.
+####################################################################
+#  Setup Timedatectl
+####################################################################
+- name: Set time to {{ timezone }}
+  timezone:
+    name: '{{ timezone }}'
+
+####################################################################
+#  Install Prerequisites
+####################################################################
+- name: Install gnupg and java
+  apt:
+    name:
+      - openjdk-8-jdk
+      - gnupg
+    state: present
+    update_cache: true
+
+####################################################################
+#  Install Elasticsearch
+####################################################################
+- name: Add Elastic GPG key
   apt_key:
-    url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    url: "{{ ELASTIC_GPG_URL }}"
     state: present
 
-- name: Add Elasticsearch repository.
+- name: Add Elastic repo
   apt_repository:
-    repo: 'deb https://artifacts.elastic.co/packages/{{ elasticsearch_version }}/apt stable main'
-    state: present
-    update_cache: yes
-
-- name: Install Elasticsearch.
-  package:
-    name: elasticsearch
+    repo: "{{ ELASTIC_REPO_URL }}"
     state: present
 
-- name: Configure Elasticsearch.
-  template:
-    src: elasticsearch.yml.j2
-    dest: /etc/elasticsearch/elasticsearch.yml
-    owner: root
-    group: elasticsearch
-    mode: 0660
-  notify:
-    - "reload systemd configuration"
-    - "restart elasticsearch"
+- name: Install Elasticsearch
+  apt:
+    name: 'elasticsearch={{ ELASTIC_VERSION }}'
 
-- name: Enable Elasticsearch.
+- name: Set to single node mode
+  lineinfile:
+    path: /etc/elasticsearch/elasticsearch.yml
+    line: 'discovery.type: single-node'
+    create: yes
+
+- name: Set to single node mode
+  lineinfile:
+    path: /etc/elasticsearch/elasticsearch.yml
+    line: 'search.max_buckets: 50000'
+    create: yes
+
+- name: Restart Elasticsearch
   service:
-    name: elasticsearch
-    state: started
+    name: 'elasticsearch'
+    state: 'restarted'
     enabled: yes
-
-- meta: flush_handlers
 
 - name: Make sure Elasticsearch is running before proceeding.
   wait_for:
-    host: "{{ elasticsearch_network_host }}"
-    port: "{{ elasticsearch_http_port }}"
+    host: "localhost"
+    port: "9200"
     delay: 3
     timeout: 300
