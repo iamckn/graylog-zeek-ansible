@@ -73,3 +73,23 @@ ansible-playbook graylog_zeek.yml -u c -k -K -i hosts -t graylog
 ansible-playbook graylog_zeek.yml -u c -k -K -i hosts
 ```
 
+# Zeek Specific Configs
+
+```bash
+mongo
+show dbs
+use graylog
+show collections
+exit
+
+mongorestore --db graylog --collection inputs graylog/inputs.bson
+mongorestore --db graylog --collection streams graylog/streams.bson
+mongorestore --db graylog --collection streamrules graylog/streamrules.bson
+mongorestore --db graylog --collection dashboards graylog/dashboards.bson
+```
+
+Set stream indexes to default index
+
+```bash
+sudo systemctl restart graylog-server
+```
